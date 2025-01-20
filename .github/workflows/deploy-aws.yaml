@@ -1,0 +1,52 @@
+name: Deploy to AWS Lambda
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Setup node env
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Install sls
+        run: pnpm install -g serverless
+      
+      - name: Build the project
+        run: pnpm run build
+      
+      - name: Config sls
+
+      # - name: Package the Lambda function
+      #   run: |
+      #     mkdir -p lambda-package
+      #     cp -r dist/* lambda-package/
+      #     cd lambda-package
+      #     zip -r ../lambda-function.zip .
+        
+      # - name: Setup AWS CLI
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: 'eu-west-1'
+
+      - name: Deploy to AWS Lambda
+        run: |
